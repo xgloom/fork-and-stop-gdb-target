@@ -3,19 +3,15 @@ import os
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-def init():
-    inject_path = os.path.join(SCRIPT_DIR, 'inject.so')
-    gdb.execute(f"set environment LD_PRELOAD={inject_path}");
-
 class ForkCommand(gdb.Command):
     def __init__(self):
+        # LD_PRELOAD inject library that takes care of forking.
+        inject_path = os.path.join(SCRIPT_DIR, 'inject.so')
+        gdb.execute(f"set environment LD_PRELOAD={inject_path}");
         super(ForkCommand, self).__init__("fork", gdb.COMMAND_USER)
 
     def invoke(self, args, from_tty):
-        # Save addresses to negative stack.
-        current_rip = gdb.parse_and_eval("$rip")
-
-        # Remove breakpoints so that fork will continue.
+        # remove breakpoints so that fork will continue.
         gdb.execute('d')
         gdb.execute('set {long long}($rsp-0x8) = $rip')
         gdb.execute('set {long long}($rsp-0x10) = $rdi')
@@ -28,6 +24,4 @@ class ForkCommand(gdb.Command):
         gdb.execute('s')
         gdb.execute('s')
 
-
-init()
 ForkCommand()
