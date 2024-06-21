@@ -11,17 +11,18 @@ class ForkCommand(gdb.Command):
         super(ForkCommand, self).__init__("fork", gdb.COMMAND_USER)
 
     def invoke(self, args, from_tty):
-        # remove breakpoints so that fork will continue.
-        gdb.execute('d')
-        gdb.execute('set {long long}($rsp-0x8) = $rip')
-        gdb.execute('set {long long}($rsp-0x10) = $rdi')
-        gdb.execute('set {long long}($rsp-0x18) = $rsi')
-        gdb.execute('set {long long}($rsp-0x20) = $rax')
+        # remove breakpoints to prevent fork crash; "jmp" to fork instructions.
+        commands = ['d',
+                    'set {long long}($rsp-0x8) = $rip',
+                    'set {long long}($rsp-0x10) = $rdi',
+                    'set {long long}($rsp-0x18) = $rsi',
+                    'set {long long}($rsp-0x20) = $rax',
+                    'set $rip = (uintptr_t)inject',
+                    'c',
+                    's',
+                    's']
 
-        # "jmp" to injected library to fork off a suspended child.
-        gdb.execute('set $rip = (uintptr_t)inject')
-        gdb.execute('c')
-        gdb.execute('s')
-        gdb.execute('s')
+        for command in commands:
+            gdb.execute(command, from_tty=False, to_string=True) 
 
 ForkCommand()
