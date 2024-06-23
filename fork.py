@@ -8,6 +8,10 @@ class ForkCommand(gdb.Command):
         # LD_PRELOAD inject library that takes care of forking.
         inject_path = os.path.join(SCRIPT_DIR, 'inject.so')
         gdb.execute(f"set environment LD_PRELOAD={inject_path}");
+
+        # if attaching to a running process, use dl_open instead of LD_PRELOAD.
+        # gdb.execute(f'call (void*) dlopen("{inject_path}", 2)')
+        
         super(ForkCommand, self).__init__("fork", gdb.COMMAND_USER)
 
     def invoke(self, args, from_tty):

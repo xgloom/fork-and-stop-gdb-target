@@ -16,7 +16,7 @@ works when you start a program (see usage below).
 If you are attaching to a running process instead, you could generalise this by
 calling `dlopen (3)` to first load the library at runtime and then jump to the
 `inject` function defined in there as defined by the script. This should
-require a minor modification.
+require a minor modification, I have put a comment with info in `fork.py`.
 
 In GDB, it contains commands to save the register that will be clobbered
 during execution of that library to the stack and pop these after executing
