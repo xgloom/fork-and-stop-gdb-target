@@ -10,19 +10,20 @@ without it affecting your original debugged session.
 
 ## How
 It instructs the loader to load an additional library that contains code to 
-fork and raises a stop signal on x86-64. This uses `LD_PRELOAD` and this trick
-works when you start a program (see usage below).
+fork and raises a stop signal on x86-64. 
 
-If you are attaching to a running process instead, you could generalise this by
-calling `dlopen (3)` to first load the library at runtime and then jump to the
-`inject` function defined in there as defined by the script. This should
-require a minor modification, I have put a comment with info in `fork.py`.
+This uses `dlopen (3)` to load the library at runtime, which depends on libc
+being present. Loading this library at runtime allows attaching to a running
+process and still fork it. Alternatively, one could use `LD_PRELOAD` at load-
+time- see comment in script to use this.
 
 In GDB, it contains commands to save the register that will be clobbered
 during execution of that library to the stack and pop these after executing
 the library code to ensure correct program state.
 
 ## Usage
+I have tested this using version: GNU gdb (Debian 13.1-3) 13.1.
+
 ```bash
 # in this directory
 make
@@ -40,3 +41,4 @@ fork
 # in shell (there should be two now)
 pidof binary-target
 ```
+
