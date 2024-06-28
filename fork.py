@@ -19,6 +19,7 @@ class ForkCommand(gdb.Command):
                         from_tty=False, to_string=False)
 
             # remove breakpoints to prevent fork crash; "jmp" to fork.
+            # steps through the 7 instructions in assembly "restore"-label. 
             commands = ['d',
                         'set {long long}($rsp-0x8) = $rip',
                         'set {long long}($rsp-0x10) = $rdi',
@@ -28,8 +29,8 @@ class ForkCommand(gdb.Command):
                         'set {long long}($rsp-0x30) = $r11',
                         'set $rip = (uintptr_t)inject',
                         'c',
-                        's',
-                        's']
+                        'si 7',
+                        'si 7']
 
             for command in commands:
                 gdb.execute(command, from_tty=False, to_string=False)
