@@ -23,13 +23,13 @@ suspend:
     syscall
 
 restore:
-    ; unconventional stack usage:
+    ; stored clobbered values on stack.
     ; ret. addr. at rsp-0x8.
-    ; rdi at rsp-0x10.
-    ; rsi at rsp-0x18
-    ; rax at rsp-0x20.
-    sub rsp, 0x20
+    sub rsp, 0x30
+    pop r11
+    pop rcx
     pop rax
     pop rsi
     pop rdi
     ret
+

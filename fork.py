@@ -24,6 +24,8 @@ class ForkCommand(gdb.Command):
                         'set {long long}($rsp-0x10) = $rdi',
                         'set {long long}($rsp-0x18) = $rsi',
                         'set {long long}($rsp-0x20) = $rax',
+                        'set {long long}($rsp-0x28) = $rcx',
+                        'set {long long}($rsp-0x30) = $r11',
                         'set $rip = (uintptr_t)inject',
                         'c',
                         's',
