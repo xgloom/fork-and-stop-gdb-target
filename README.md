@@ -1,8 +1,8 @@
 # Fork and stop a GDB target
 
 ## Info
-GDB script and (preloaded) library that enables a user to fork of a binary gdb 
-target in a stopped/suspended state.
+GDB script that enables a user to fork of a binary gdb target in a stopped/
+suspended state.
 
 I did not find any reference online on how to do this, so I am sharing this
 method. This can be useful if you want to interfer with the debugged program
